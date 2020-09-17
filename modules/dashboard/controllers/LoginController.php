@@ -4,7 +4,7 @@ class LoginController extends Controller {
 
 	public function index() {
 
-		$login = isset($_SESSION["login"]) ? $_SESSION["login"] : '';
+		$login = isset($_SESSION["loginasiantexsb"]) ? $_SESSION["loginasiantexsb"] : '';
 
 		if($login!=='') {
 			$this->redirect('index.php');
@@ -28,7 +28,7 @@ class LoginController extends Controller {
 			if(count($user) > 0) {
 				//berhasil masuk
 				$masuk = true;
-				$_SESSION["login"] = $user[0];
+				$_SESSION["loginasiantexsb"] = $user[0];
 
 				$this->redirect('index.php');
 			}
@@ -37,7 +37,7 @@ class LoginController extends Controller {
 	}
 
 	public function logout() {
-		unset($_SESSION["login"]);
+		unset($_SESSION["loginasiantexsb"]);
 		$this->redirect('index.php');
 	}
 	

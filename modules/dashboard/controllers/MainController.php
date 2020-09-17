@@ -9,7 +9,7 @@ class MainController extends Controller {
 
     public function __construct() {
 
-        $this->login = isset($_SESSION["login"]) ? $_SESSION["login"] : '';
+        $this->login = isset($_SESSION["loginasiantexsb"]) ? $_SESSION["loginasiantexsb"] : '';
 
         if($this->login=='') {
             $this->redirect(SITE_URL . "?page=login");
