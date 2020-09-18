@@ -1,3 +1,10 @@
+<style>
+	.ui-autocomplete { 
+		height: 90px; 
+		overflow-y: auto; 
+		overflow-x: hidden;
+	}
+</style>
 <div class="page-inner">
 	<div class="page-header">
 		<h4 class="page-title"><?php echo $data["title"]; ?></h4>
@@ -143,7 +150,6 @@
 		});
 
 		$('#idbarang').autocomplete({
-			maxLength: 1,
 			source: "<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=autobarang",
 
 			select: function (event, ui) {
