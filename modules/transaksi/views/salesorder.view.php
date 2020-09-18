@@ -53,16 +53,15 @@
 										<td><?= $so->totalqty; ?></td>
 										<td>
 											<div class="form-button-action">
-												<button type="button" data-toggle="tooltip" title="Post Data" onclick="alert('<?= $so->id_trans ?>','posting')" class="btn btn-link btn-warning btn-md">
+												<button type="button" data-toggle="tooltip" title="Post Data" onclick="alert('<?= $so->id_trans ?>','posting')" class="btn btn-icon btn-round btn-warning">
 													<i class="fa fa-share"></i>
 												</button>
-												<button type="button" data-toggle="tooltip" title="Edit Data" onclick="window.location.href='<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=update&&id=<?php echo $so->id_trans; ?>';" class="btn btn-link btn-primary btn-md">
+												<button type="button" data-toggle="tooltip" title="Edit Data" onclick="window.location.href='<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=update&&id=<?php echo $so->id_trans; ?>';" class="btn btn-icon btn-round btn-primary">
 													<i class="fa fa-edit"></i>
 												</button>
-												<button type="button" data-toggle="tooltip" title="Hapus Data" onclick="alert('<?= $so->id_trans ?>','hapus')" class="btn btn-link btn-danger btn-md">
+												<button type="button" data-toggle="tooltip" title="Hapus Data" onclick="alert('<?= $so->id_trans ?>','hapus')" class="btn btn-icon btn-round btn-danger">
 													<i class="fa fa-trash"></i>
 												</button>
-											</div>
 										</td>
 									</tr>
 									<?php

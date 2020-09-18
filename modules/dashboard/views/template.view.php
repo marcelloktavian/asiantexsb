@@ -27,17 +27,18 @@ $page = (isset($_GET['page']) && $_GET['page']) ? $_GET['page'] : 'dashboard/hom
 
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="resources/assets/plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="resources/assets/plugins/jquery-ui/jquery-ui.min.css">
 	<link rel="stylesheet" href="resources/assets/plugins/bootstrap-select/css/bootstrap-select.min.css">
 	<link rel="stylesheet" href="resources/assets/plugins/toastr/toastr.css">
 	<link rel="stylesheet" href="resources/assets/css/atlantis.min.css">
 
 	<!--   Core JS Files   -->
-	<script src="resources/assets/js/core/jquery.3.2.1.min.js"></script>
+	<script src="resources/assets/plugins/jQuery_v1.11.2/jquery.min.js"></script>
 	<script src="resources/assets/js/core/popper.min.js"></script>
 	<script src="resources/assets/js/core/bootstrap.min.js"></script>
 
 	<!-- jQuery UI -->
-	<script src="resources/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script src="resources/assets/plugins/jquery-ui/jquery-ui.js"></script>
 
 	<!-- jQuery Scrollbar -->
 	<script src="resources/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
