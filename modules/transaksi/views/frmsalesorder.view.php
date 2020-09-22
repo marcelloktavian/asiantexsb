@@ -138,94 +138,147 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label for="customer" class="col-md-3">Input Barang</label>
+								<div class="form-group"><label for="idbarang" class="col-md-3">Input Barang</label>
 									<div class="col-md-12 p-0">
-										<input type="text" class="form-control" name="idbarang" id="idbarang" placeholder="Masukkan ID/Kode Barang">
+										<div class="input-group mb-3">
+											<!-- Barang -->
+											<input type="text" class="form-control" name="idbarang" id="idbarang" placeholder="Masukkan ID/Kode Barang">
+
+
+											<div class="input-group-append">
+												<button type="button" value="Scan" id="scan" onclick="decoder.play();" class="btn btn-info" data-toggle="modal" data-target="#ModalScan">Scan</button>
+											</div>
+										</div>
 									</div>
+
+									<!-- Modal Scan -->
+									<div class="modal fade" id="ModalScan" tabindex="-1" role="dialog" aria-labelledby="ModalScanLabel" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="ModalScanLabel">Scan ID Barang</h5>
+													<button type="button" onclick="decoder.stop();" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<center><canvas width="100%"></canvas><br/>
+														<select id="cam"></select></center>
+													</div>
+													<div class="modal-footer">
+														<button type="button" onclick="decoder.stop();" class="btn btn-info" data-dismiss="modal">Close</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- End Modal Scan -->
+
+										<hr>
+										<table id='tbl_keranjang' class="table table-striped table-hover table-responsive-lg" >
+											<thead>
+												<tr>
+													<th>ID Detail</th>
+													<th>Kode Barang</th>
+													<th>ID Barang</th>
+													<th>Qty</th>
+													<th>Aksi</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+												if ($_GET['action']=='update') {
+													$i=1;
+													foreach ($data["so"]  as $record) {
+														echo "<tr><td><p>".$record->id_detail."</p>";
+														echo "<input type='hidden' name='iddetail[]' id='iddetail_".$i."'value='".$record->id_detail."' ></td>";
+														echo "<td><p>".$record->kode_brg."</p>";
+														echo "<input type='hidden' name='kd_brg[]' id='kd_brg_".$i."'value='".$record->kode_brg."' ></td>";
+														echo "<td><p>".$record->id_barang."</p>";
+														echo "<input type='hidden' name='id_brg[]' id='id_brg_".$i."'value='".$record->id_barang."' ></td>";
+														echo "<td><input type='text' name='qty[]' id='qty_".$i."' size='3' style='text-align: right;' value='".$record->qty."' onkeyup='hitung()'></td>";
+														echo "<td><button type='button' data-toggle='tooltip' title='Hapus'class='btn btn-icon btn-round btn-danger' onclick='hapus(".$i.")'><i class='fa fa-times'></i></button></td></tr>";
+														$i++;
+													}
+												}
+												?>
+											</tbody>
+										</table>
+									</form>
 								</div>
-								<hr>
-								<table id='tbl_keranjang' class="table table-striped table-hover table-responsive-lg" >
-									<thead>
-										<tr>
-											<th>ID Detail</th>
-											<th>Kode Barang</th>
-											<th>ID Barang</th>
-											<th>Qty</th>
-											<th>Aksi</th>
-										</tr>
-									</thead>
-									<tbody>
-										<?php
-										if ($_GET['action']=='update') {
-											$i=1;
-											foreach ($data["so"]  as $record) {
-												echo "<tr><td><p>".$record->id_detail."</p>";
-												echo "<input type='hidden' name='iddetail[]' id='iddetail_".$i."'value='".$record->id_detail."' ></td>";
-												echo "<td><p>".$record->kode_brg."</p>";
-												echo "<input type='hidden' name='kd_brg[]' id='kd_brg_".$i."'value='".$record->kode_brg."' ></td>";
-												echo "<td><p>".$record->id_barang."</p>";
-												echo "<input type='hidden' name='id_brg[]' id='id_brg_".$i."'value='".$record->id_barang."' ></td>";
-												echo "<td><input type='text' name='qty[]' id='qty_".$i."' size='3' style='text-align: right;' value='".$record->qty."' onkeyup='hitung()'></td>";
-												echo "<td><button type='button' data-toggle='tooltip' title='Hapus'class='btn btn-icon btn-round btn-danger' onclick='hapus(".$i.")'><i class='fa fa-times'></i></button></td></tr>";
-												$i++;
-											}
-										}
-										?>
-									</tbody>
-								</table>
-							</form>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
 
-<script>
-	var totalbaris=0;
+		<script>
+			var modal = document.getElementById('ModalScan');
 
-	$('document').ready(function() {   
-		hitung();
-		$('#idbarang').click(function() {
-			$(this).val('');
-		});
-
-		$('#idbarang').autocomplete({
-			source: "<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=autobarang",
-
-			select: function (event, ui) {
-				BarisBaru('',ui.item.description, ui.item.label,'0');
+			window.onclick = function(event) {
+				if (event.target == modal) {
+					modal.style.display = "none";
+					decoder.stop();
+				}
 			}
-		});
-	});
 
-	function BarisBaru($iddetail, $kd_brg, $id_brg, $qty) {
+			var arg = {
+				resultFunction: function(result) {
+					$('#idbarang').val(result.code);
+					$("#ModalScan").modal("hide");
+					decoder.stop();
+				}
+			};
 
-		var kondisi='T';
+			var decoder = $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery;
+			decoder.buildSelectMenu("#cam");
 
-		$('#tbl_keranjang tbody tr').each(function(){
-
-			var idbrg = $(this).find('td:nth-child(3) p').text();
-
-			if ($id_brg==idbrg) {
-				kondisi='Y';
-			}
-		});
-
-		if(kondisi=='Y'){
-			Swal.fire({
-				title: 'Gagal',
-				text: "Barang sudah ada dibawah.",
-				icon: 'error',
-				showCancelButton: false,
-				confirmButtonText: 'OK',
-				confirmButtonColor: '#3085d6',
-				reverseButtons: false
+			$('#cam').on('change', function(){
+				decoder.stop().play();
 			});
-		}else{
-			totalbaris += 1;
+
+			var totalbaris=0;
+
+			$('document').ready(function() {   
+				hitung();
+				$('#idbarang').click(function() {
+					$(this).val('');
+				});
+
+				$('#idbarang').autocomplete({
+					source: "<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=autobarang",
+
+					select: function (event, ui) {
+						BarisBaru('',ui.item.description, ui.item.label,'0');
+					}
+				});
+			});
+
+			function BarisBaru($iddetail, $kd_brg, $id_brg, $qty) {
+
+				var kondisi='T';
+
+				$('#tbl_keranjang tbody tr').each(function(){
+
+					var idbrg = $(this).find('td:nth-child(3) p').text();
+
+					if ($id_brg==idbrg) {
+						kondisi='Y';
+					}
+				});
+
+				if(kondisi=='Y'){
+					Swal.fire({
+						title: 'Gagal',
+						text: "Barang sudah ada dibawah.",
+						icon: 'error',
+						showCancelButton: false,
+						confirmButtonText: 'OK',
+						confirmButtonColor: '#3085d6',
+						reverseButtons: false
+					});
+				}else{
+					totalbaris += 1;
 			// console.log(totalbaris);
 			var Nomor = $('#tbl_keranjang tbody tr').length + 1;
 			var Baris = "<tr>";
