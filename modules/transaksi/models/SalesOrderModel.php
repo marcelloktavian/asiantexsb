@@ -11,6 +11,15 @@ class SalesOrderModel extends Model{
 		return $this->db->execute()->toObject();
 	}
 
+	public function get_barang($id)
+	{
+		$sql = "SELECT * FROM `barang` WHERE id_barang='".$id."'";
+
+		$this->db->query($sql);
+
+		return $this->db->execute()->toObject();
+	}
+
 	public function getID($id)
 	{
 		$sql = "SELECT * FROM `trsalesorder_detail` WHERE id_trans='".$id."'";

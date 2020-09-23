@@ -223,12 +223,25 @@
 			}
 		}
 
-
-
 		var arg = {
 			resultFunction: function(result) {
-				var barang = result.code.split("/");
-				BarisBaru('', barang[0], barang[1],'0');
+				// var barang = result.code.split("/");
+				var barang = result.code;
+
+				$.ajax({
+					type: 'POST',
+					url: '<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=ajaxbarang',
+					data: { barang: barang },
+					dataType :"text",
+					success: function(response) {
+						var datanya = JSON.parse(response);
+						// console.log(datanya[0].kode_brg);
+						BarisBaru('',datanya[0].kode_brg, datanya[0].id_barang,'0');
+						// alert(response); 
+					}
+				});
+
+				// BarisBaru('', barang[0], barang[1],'0');
 				$("#ModalScan").modal("hide");
 				decoder.stop();
 			}

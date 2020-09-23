@@ -13,6 +13,17 @@ class SalesOrderController extends MainController {
 		$this->template('transaksi/salesorder', array('salesorder' => $data));
 	}
 
+	public function ajaxbarang() {
+		if (isset($_POST['barang']) && $_POST['barang'] != "") { 
+			$this->model('salesorder','transaksi');
+			$model = new SalesOrderModel();
+
+			$data = $model->get_barang($_POST['barang']);
+
+			echo json_encode($data);
+		} 
+	}
+
 	public function delete() {
 		$id = isset($_GET["id"]) ? $_GET["id"] : 0;
 
@@ -62,7 +73,7 @@ class SalesOrderController extends MainController {
 		$success    = null;
 
 		if($_SERVER["REQUEST_METHOD"] == "POST") {
-			
+
 			if (trim($_POST["totqty"])=='0') {
 				//Jika tabel keranjang kosong.
 				$error = "Tabel Keranjang kosong.";
