@@ -62,14 +62,19 @@ class SalesOrderController extends MainController {
 		$success    = null;
 
 		if($_SERVER["REQUEST_METHOD"] == "POST") {
-			//generate id transaksi
-			$id=$model->kodeoto();
-			foreach ($id as $idny ) {
-				$idtrans = $idny->awal;
-			}
+			
+			if (trim($_POST["totqty"])=='0') {
+				//Jika tabel keranjang kosong.
+				$error = "Tabel Keranjang kosong.";
+			} else {
+				//generate id transaksi
+				$id=$model->kodeoto();
+				foreach ($id as $idny ) {
+					$idtrans = $idny->awal;
+				}
 
-			// insert master
-			$data = array(
+				// insert master
+				$data = array(
 				'id_trans'       	=> $idtrans, //auto generate
 				'kode'				=> ' ',
 				'tgl_trans'			=> date("Y-m-d H:i:s"),
@@ -91,39 +96,40 @@ class SalesOrderController extends MainController {
 				'deleted'       	=> '0',
 				'state'       		=> '0',
 			);
-			$master = $model->saveMaster($data);
+				$master = $model->saveMaster($data);
 
-			//insert detail
-			$kdbrg=$_POST['kd_brg'];
-			for ($i=0; $i < count($kdbrg); $i++) {
-				if ($_POST['kd_brg'][$i]!=='') {
+				//insert detail
+				$kdbrg=$_POST['kd_brg'];
+				for ($i=0; $i < count($kdbrg); $i++) {
+					if ($_POST['kd_brg'][$i]!=='') {
 
-					$brg=$model->getBarang($_POST['kd_brg'][$i]);
-					foreach ($brg as $brgny ) {
-						if ($brgny->id_jenis == '') {
-							$idjenis = '0';
-						} else {
-							$idjenis = $brgny->id_jenis;
+						$brg=$model->getBarang($_POST['kd_brg'][$i]);
+						foreach ($brg as $brgny ) {
+							if ($brgny->id_jenis == '') {
+								$idjenis = '0';
+							} else {
+								$idjenis = $brgny->id_jenis;
+							}
 						}
-					}
 
-					$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
-					$dataDet['id_jenis'] = $idjenis;
-					$dataDet['id_barang'] = $_POST['id_brg'][$i];
-					$dataDet['id_trans'] = $idtrans;
-					$dataDet['harga'] = 0;
-					$dataDet['id_karyawan'] = trim($_POST["iduser"]);
-					$dataDet['qty'] = $_POST['qty'][$i];
-					$dataDet['qty_kirim'] = 0;
-					$detail = $model->saveDetail($dataDet);
-				} 
-			}
+						$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
+						$dataDet['id_jenis'] = $idjenis;
+						$dataDet['id_barang'] = $_POST['id_brg'][$i];
+						$dataDet['id_trans'] = $idtrans;
+						$dataDet['harga'] = 0;
+						$dataDet['id_karyawan'] = trim($_POST["iduser"]);
+						$dataDet['qty'] = $_POST['qty'][$i];
+						$dataDet['qty_kirim'] = 0;
+						$detail = $model->saveDetail($dataDet);
+					} 
+				}
 
-			if($master && $detail) {
-				$success = "Data Berhasil di simpan.";
-			}else{
-				$error = "Data Gagal di simpan.";
-			}
+				if($master && $detail) {
+					$success = "Data Berhasil di simpan.";
+				}else{
+					$error = "Data Gagal di simpan.";
+				}
+			}		
 
 		}
 		$this->template('transaksi/frmsalesorder', array('customer' => $customer, 'success' => $success, 'error' => $error, 'title' => 'Tambah Data'));
@@ -145,33 +151,61 @@ class SalesOrderController extends MainController {
 		$success    = null;
 
 		if($_SERVER["REQUEST_METHOD"] == "POST") {
-			// update master
-			$datamaster = array(
-				'kode'				=> ' ',
-				'tgl_trans'			=> date("Y-m-d H:i:s"),
-				'id_supplier'		=> trim($_POST["customer"]),
-				'perintah'    	 	=> '',
-				'keluhan'      		=> ' ',
-				'biaya'     	  	=> '0',
-				'faktur'       		=> '0',
-				'totalqty' 			=> trim($_POST["totqty"]),
-				'totalfaktur' 		=> '0',
-				'tunai'     		=> '0',
-				'transfer'       	=> '0',
-				'kartu'       		=> '0',
-				'deposit'       	=> '0',
-				'simpan_deposit' 	=> '0',
-				'piutang'      		=> '0',
-				'pelunasan'      	=> '0',
-				'id_user'			=> trim($_POST["iduser"]),
-			);
-			$master = $model->updateMaster($datamaster, trim($_POST["idtrans"]));
+			if (trim($_POST["totqty"])=='0') {
+				//Jika tabel keranjang kosong.
+				$error = "Tabel Keranjang kosong.";
+			} else {
+				// update master
+				if (trim($_POST["customer"])=='selected') {
+					//jika select customer tidak dipilih kembali
+					$datamaster = array(
+						'kode'				=> ' ',
+						'tgl_trans'			=> date("Y-m-d H:i:s"),
+						'perintah'    	 	=> '',
+						'keluhan'      		=> ' ',
+						'biaya'     	  	=> '0',
+						'faktur'       		=> '0',
+						'totalqty' 			=> trim($_POST["totqty"]),
+						'totalfaktur' 		=> '0',
+						'tunai'     		=> '0',
+						'transfer'       	=> '0',
+						'kartu'       		=> '0',
+						'deposit'       	=> '0',
+						'simpan_deposit' 	=> '0',
+						'piutang'      		=> '0',
+						'pelunasan'      	=> '0',
+						'id_user'			=> trim($_POST["iduser"]),
+					);
+				} else {
+					//jika select customer dipilih kembali
+					$datamaster = array(
+						'kode'				=> ' ',
+						'tgl_trans'			=> date("Y-m-d H:i:s"),
+						'id_supplier'		=> trim($_POST["customer"]),
+						'perintah'    	 	=> '',
+						'keluhan'      		=> ' ',
+						'biaya'     	  	=> '0',
+						'faktur'       		=> '0',
+						'totalqty' 			=> trim($_POST["totqty"]),
+						'totalfaktur' 		=> '0',
+						'tunai'     		=> '0',
+						'transfer'       	=> '0',
+						'kartu'       		=> '0',
+						'deposit'       	=> '0',
+						'simpan_deposit' 	=> '0',
+						'piutang'      		=> '0',
+						'pelunasan'      	=> '0',
+						'id_user'			=> trim($_POST["iduser"]),
+					);
+				}
 
-			//kondisi detail
-			$kdbrg=$_POST['kd_brg'];
-			for ($i=0; $i < count($kdbrg); $i++) {
-				//get id jenis setiap barang
-				$brg=$model->getBarang($_POST['kd_brg'][$i]);
+				$master = $model->updateMaster($datamaster, trim($_POST["idtrans"]));
+
+				//kondisi detail
+				$kdbrg=$_POST['kd_brg'];
+				for ($i=0; $i < count($kdbrg); $i++) {
+					//get id jenis setiap barang
+					$brg=$model->getBarang($_POST['kd_brg'][$i]);
 					foreach ($brg as $brgny ) {
 						if ($brgny->id_jenis == '') {
 							$idjenis = '0';
@@ -180,35 +214,35 @@ class SalesOrderController extends MainController {
 						}
 					}
 
-				if ($_POST['iddetail'][$i]=='') {
-					//insert detail
-					$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
-					$dataDet['id_jenis'] = $idjenis;
-					$dataDet['id_barang'] = $_POST['id_brg'][$i];
-					$dataDet['id_trans'] = trim($_POST["idtrans"]);
-					$dataDet['harga'] = 0;
-					$dataDet['id_karyawan'] = trim($_POST["iduser"]);
-					$dataDet['qty'] = $_POST['qty'][$i];
-					$dataDet['qty_kirim'] = 0;
-					$detail = $model->saveDetail($dataDet);
+					if ($_POST['iddetail'][$i]=='') {
+						//insert detail
+						$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
+						$dataDet['id_jenis'] = $idjenis;
+						$dataDet['id_barang'] = $_POST['id_brg'][$i];
+						$dataDet['id_trans'] = trim($_POST["idtrans"]);
+						$dataDet['harga'] = 0;
+						$dataDet['id_karyawan'] = trim($_POST["iduser"]);
+						$dataDet['qty'] = $_POST['qty'][$i];
+						$dataDet['qty_kirim'] = 0;
+						$detail = $model->saveDetail($dataDet);
 
-				} else {
-					//update detail
-					$dataDet['id_jenis'] = $idjenis;
-					$dataDet['harga'] = 0;
-					$dataDet['id_karyawan'] = trim($_POST["iduser"]);
-					$dataDet['qty'] = $_POST['qty'][$i];
-					$detail = $model->updateDetail($dataDet, $_POST['iddetail'][$i]);
-					
+					} else {
+						//update detail
+						$dataDet['id_jenis'] = $idjenis;
+						$dataDet['harga'] = 0;
+						$dataDet['id_karyawan'] = trim($_POST["iduser"]);
+						$dataDet['qty'] = $_POST['qty'][$i];
+						$detail = $model->updateDetail($dataDet, $_POST['iddetail'][$i]);
+
+					}
+				}
+
+				if($master && $detail) {
+					$success = "Data Berhasil di ubah.";
+				}else{
+					$error = "Data Gagal di simpan.";
 				}
 			}
-
-			if($master && $detail) {
-				$success = "Data Berhasil di ubah.";
-			}else{
-				$error = "Data Gagal di simpan.";
-			}
-
 		}
 
 		$this->template('transaksi/frmsalesorder', array('customer' => $customer, 'so' => $data, 'custEdit' => $custEdit[0], 'success' => $success, 'error' => $error, 'title' => 'Ubah Data'));
