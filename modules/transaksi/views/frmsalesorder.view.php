@@ -1,4 +1,8 @@
 <style>
+	.hide{
+		visibility: hidden;
+	}
+
 	.ui-autocomplete { 
 		height: 90px; 
 		overflow-y: auto; 
@@ -178,7 +182,7 @@
 									<table id='tbl_keranjang' class="table table-striped table-hover table-responsive-lg" >
 										<thead>
 											<tr>
-												<th>ID Detail</th>
+												<th style="display:none;">ID Detail</th>
 												<th>Kode Barang</th>
 												<th>ID Barang</th>
 												<th>Qty</th>
@@ -190,7 +194,7 @@
 											if ($_GET['action']=='update') {
 												$i=1;
 												foreach ($data["so"]  as $record) {
-													echo "<tr><td><p>".$record->id_detail."</p>";
+													echo "<tr><td style='display:none;'><p>".$record->id_detail."</p>";
 													echo "<input type='hidden' name='iddetail[]' id='iddetail_".$i."'value='".$record->id_detail."' ></td>";
 													echo "<td><p>".$record->kode_brg."</p>";
 													echo "<input type='hidden' name='kd_brg[]' id='kd_brg_".$i."'value='".$record->kode_brg."' ></td>";
@@ -299,7 +303,7 @@
 			// console.log(totalbaris);
 			var Nomor = $('#tbl_keranjang tbody tr').length + 1;
 			var Baris = "<tr>";
-			Baris += "<td>";
+			Baris += "<td style='display:none;'>";
 			Baris += "<p>"+$iddetail+"</p>";
 			Baris += "<input type='hidden' name='iddetail[]' id='iddetail_"+totalbaris+"'value='"+$iddetail+"' ></td>";
 			Baris += "<td>";
