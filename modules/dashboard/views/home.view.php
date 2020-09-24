@@ -86,7 +86,7 @@
 			<div class="card">
 				<div class="card-header">
 					<div class="card-head-row">
-						<div class="card-title">Statistic Pasien Perbulan</div>
+						<div class="card-title">Statistic Pemesanan Perbulan</div>
 					</div>
 				</div>
 				<div class="card-body">
@@ -110,7 +110,7 @@
 
 	function waktu() {
 		$.ajax({
-			url: 'http://localhost:8080/asiantexsb/modules/waktu.php',
+			url: '<?= PATH . "/modules/waktu.php" ?>',
 			success: function(data) {
 				$('#waktu').html(data);
 			},
@@ -118,27 +118,50 @@
 	}
 
 	var barChart = document.getElementById('barChart').getContext('2d');
-	var myBarChart = new Chart(barChart, {
-		type: 'bar',
-		data: {
-			labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-			datasets : [{
-				label: "Pasien",
-				backgroundColor: 'rgb(23, 125, 255)',
-				borderColor: 'rgb(23, 125, 255)',
-				data: [3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4],
-			}],
-		},
-		options: {
-			responsive: true, 
-			maintainAspectRatio: false,
-			scales: {
-				yAxes: [{
-					ticks: {
-						beginAtZero:true
+	$.ajax({
+			url: '<?php echo SITE_URL; ?>?file=dashboard&&page=home&&action=ajaxchartjs',
+			success: function(data) {
+				var databulan = JSON.parse(data);
+				// console.log(test);
+				// for(var i = 0; i < databulan.length; i++){
+					// console.log(data[8].totalbulan);
+					// console.log(databulan[8].totalbulan);
+				// }
+					var myBarChart = new Chart(barChart, {
+					type: 'bar',
+					data: {
+						labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+						datasets : [{
+							label: "PEMESANAN",
+							backgroundColor: 'rgb(23, 125, 255)',
+							borderColor: 'rgb(23, 125, 255)',
+							data: [databulan[0].totalbulan,
+							 databulan[1].totalbulan,
+							  databulan[2].totalbulan,
+							   databulan[3].totalbulan,
+								databulan[4].totalbulan,
+								 databulan[5].totalbulan,
+								  databulan[6].totalbulan,
+								   databulan[7].totalbulan,
+									databulan[8].totalbulan,
+									 databulan[9].totalbulan,
+									  databulan[10].totalbulan,
+									   databulan[11].totalbulan,
+									],
+						}],
+					},
+					options: {
+						responsive: true, 
+						maintainAspectRatio: false,
+						scales: {
+							yAxes: [{
+								ticks: {
+									beginAtZero:true
+								}
+							}]
+						},
 					}
-				}]
+				});
 			},
-		}
-	});
+		});
 </script>

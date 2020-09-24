@@ -14,5 +14,12 @@ class HomeController extends MainController {
 		$this->template('dashboard/home', array('userData' => $data, 'total' => $total));
 	}
 
+	public function ajaxchartjs() {
+		$this->model('chart','dashboard');
+		$model = new ChartModel();
+		$dataTotal = $model->getChart();
+		echo json_encode($dataTotal);
+	}
+
 }
 ?>
