@@ -278,7 +278,7 @@
 			if(kondisi=='Y'){
 				Swal.fire({
 					title: 'Gagal',
-					text: "Barang sudah ada dibawah.",
+					text: "Barang sudah ada di keranjang.",
 					icon: 'error',
 					showCancelButton: false,
 					confirmButtonText: 'OK',

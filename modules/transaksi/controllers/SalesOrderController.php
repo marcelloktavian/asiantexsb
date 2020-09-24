@@ -112,8 +112,7 @@ class SalesOrderController extends MainController {
 				//insert detail
 				$kdbrg=$_POST['kd_brg'];
 				for ($i=0; $i < count($kdbrg); $i++) {
-					if ($_POST['kd_brg'][$i]!=='') {
-
+					if ($_POST['kd_brg'][$i]!=='' && $_POST['qty'][$i]!=='0') {
 						$brg=$model->getBarang($_POST['kd_brg'][$i]);
 						foreach ($brg as $brgny ) {
 							if ($brgny->id_jenis == '') {
@@ -225,7 +224,7 @@ class SalesOrderController extends MainController {
 						}
 					}
 
-					if ($_POST['iddetail'][$i]=='') {
+					if ($_POST['iddetail'][$i]=='' && $_POST['qty'][$i]!=='0') {
 						//insert detail
 						$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
 						$dataDet['id_jenis'] = $idjenis;
@@ -236,7 +235,6 @@ class SalesOrderController extends MainController {
 						$dataDet['qty'] = $_POST['qty'][$i];
 						$dataDet['qty_kirim'] = 0;
 						$detail = $model->saveDetail($dataDet);
-
 					} else {
 						//update detail
 						$dataDet['id_jenis'] = $idjenis;
