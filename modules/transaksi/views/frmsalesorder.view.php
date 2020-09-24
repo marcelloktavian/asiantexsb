@@ -191,7 +191,7 @@
 													echo "<input type='hidden' name='id_brg[]' id='id_brg_".$i."'value='".$record->id_barang."' ></td>";
 													echo "<td><p>".$record->nm_barang."</p>";
 													echo "</td>";
-													echo "<td><select id='jenis' name='jenis'>";
+													echo "<td><select id='jenis_".$i."' name='jenis[]'>";
 													echo "<option value='' disabled>-Pilih Kategori-</option>";
 
 													echo "<option value=".$record->id_jns." selected>".$record->jns."</option>";
@@ -316,7 +316,7 @@
 			Baris += "<td><p>"+$nmbrg+"</p>";
 			Baris += "</td>";
 
-			Baris += "<td><select id='jenis_"+totalbaris+"' name='jenis[]'>";
+			Baris += "<td><select name='jenis[]' id='jenis_"+totalbaris+"'>";
 			Baris += "<option value='' disabled>-Pilih Kategori-</option>";
 			Baris += "<?php foreach ($data['jenis'] as $jenisny) { ?>";
 			Baris += "<option value='<?= $jenisny->id_jenis ?>'><?= $jenisny->nm_jenis ?></option>";

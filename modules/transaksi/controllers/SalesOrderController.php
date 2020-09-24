@@ -127,9 +127,14 @@ class SalesOrderController extends MainController {
 				for ($i=0; $i < count($kdbrg); $i++) {
 					if ($_POST['kd_brg'][$i]!=='' && $_POST['qty'][$i]!=='0') {
 						$brg=$model->getBarang($_POST['kd_brg'][$i]);
+						if ($_POST['jenis'][$i]=='0' || $_POST['jenis'][$i]=="" || $_POST['jenis'][$i]=='selected') {
+							$jenis = 1;
+						} else {
+							$jenis = $_POST['jenis'][$i];
+						}
 
 						$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
-						$dataDet['id_jenis'] = $_POST['jenis'][$i];
+						$dataDet['id_jenis'] = $jenis;
 						$dataDet['id_barang'] = $_POST['id_brg'][$i];
 						$dataDet['id_trans'] = $idtrans;
 						$dataDet['harga'] = 0;
@@ -224,11 +229,16 @@ class SalesOrderController extends MainController {
 				for ($i=0; $i < count($kdbrg); $i++) {
 					//get id jenis setiap barang
 					$brg=$model->getBarang($_POST['kd_brg'][$i]);
+					if ($_POST['jenis'][$i]=='0' || $_POST['jenis'][$i]=="" || $_POST['jenis'][$i]=='selected') {
+						$jenis = 1;
+					} else {
+						$jenis = $_POST['jenis'][$i];
+					}
 
 					if ($_POST['iddetail'][$i]=='' && $_POST['qty'][$i]!=='0') {
 						//insert detail
 						$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
-						$dataDet['id_jenis'] = $_POST['jenis'][$i];
+						$dataDet['id_jenis'] = $jenis;
 						$dataDet['id_barang'] = $_POST['id_brg'][$i];
 						$dataDet['id_trans'] = trim($_POST["idtrans"]);
 						$dataDet['harga'] = 0;
@@ -238,7 +248,7 @@ class SalesOrderController extends MainController {
 						$detail = $model->saveDetail($dataDet);
 					} else {
 						//update detail
-						$dataDet['id_jenis'] = $_POST['jenis'][$i];
+						$dataDet['id_jenis'] = $jenis;
 						$dataDet['harga'] = 0;
 						$dataDet['id_karyawan'] = trim($_POST["iduser"]);
 						$dataDet['qty'] = $_POST['qty'][$i];
