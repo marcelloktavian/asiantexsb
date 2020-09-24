@@ -22,7 +22,7 @@ class SalesOrderModel extends Model{
 
 	public function getID($id)
 	{
-		$sql = "SELECT * FROM `trsalesorder_detail` WHERE id_trans='".$id."'";
+		$sql = "SELECT det.*, brg.nm_barang, det.id_jenis as id_jns, jb.nm_jenis AS jns FROM `trsalesorder_detail` det INNER JOIN barang brg on brg.kode_brg=det.kode_brg INNER JOIN jenis_barang jb ON jb.id_jenis=det.id_jenis WHERE det.id_trans='".$id."'";
 
 		$this->db->query($sql);
 
@@ -38,9 +38,27 @@ class SalesOrderModel extends Model{
 		return $this->db->execute()->toObject();
 	}
 
+	public function getJenisEdit($id)
+	{
+		$sql = "SELECT det.*, jb.nm_jenis FROM trsalesorder_detail det INNER JOIN `jenis_barang` jb ON jb.id_jenis = det.id_jenis WHERE tso.`id_trans`='".$id."'";
+
+		$this->db->query($sql);
+
+		return $this->db->execute()->toObject();
+	}
+
 	public function getCustomer()
 	{
 		$sql = "SELECT * FROM `tblsupplier` WHERE `namaperusahaan`<>'' order by namaperusahaan asc";
+
+		$this->db->query($sql);
+
+		return $this->db->execute()->toObject();
+	}
+
+	public function getJenis()
+	{
+		$sql = "SELECT * FROM `jenis_barang` order by nm_jenis asc";
 
 		$this->db->query($sql);
 

@@ -63,11 +63,24 @@ class SalesOrderController extends MainController {
 		}
 	}
 
+	public function list()
+	{
+		if (isset($_POST['idtrans']) && $_POST['idtrans'] != "") { 
+			$this->model('salesorder','transaksi');
+			$model = new SalesOrderModel();
+
+			$data = $model->getID($_POST['idtrans']);
+
+			echo json_encode($data);
+		} 
+	}
+
 	public function insert() {
 
 		$this->model('salesorder','transaksi');
 		$model = new SalesOrderModel();
 		$customer = $model->getCustomer();
+		$jenis = $model->getJenis();
 
 		$error    	= null;
 		$success    = null;
@@ -114,16 +127,9 @@ class SalesOrderController extends MainController {
 				for ($i=0; $i < count($kdbrg); $i++) {
 					if ($_POST['kd_brg'][$i]!=='' && $_POST['qty'][$i]!=='0') {
 						$brg=$model->getBarang($_POST['kd_brg'][$i]);
-						foreach ($brg as $brgny ) {
-							if ($brgny->id_jenis == '') {
-								$idjenis = '0';
-							} else {
-								$idjenis = $brgny->id_jenis;
-							}
-						}
 
 						$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
-						$dataDet['id_jenis'] = $idjenis;
+						$dataDet['id_jenis'] = $_POST['jenis'][$i];
 						$dataDet['id_barang'] = $_POST['id_brg'][$i];
 						$dataDet['id_trans'] = $idtrans;
 						$dataDet['harga'] = 0;
@@ -142,7 +148,7 @@ class SalesOrderController extends MainController {
 			}		
 
 		}
-		$this->template('transaksi/frmsalesorder', array('customer' => $customer, 'success' => $success, 'error' => $error, 'title' => 'Tambah Data'));
+		$this->template('transaksi/frmsalesorder', array('customer' => $customer, 'jenis' => $jenis, 'success' => $success, 'error' => $error, 'title' => 'Tambah Data'));
 	}
 
 	public function update() {
@@ -154,8 +160,10 @@ class SalesOrderController extends MainController {
 
 		$data = $model->getID($id);
 		$custEdit = $model->getCustEdit($id);
+		$jenisEdit = $model->getJenisEdit($id);
 
 		$customer = $model->getCustomer();
+		$jenis = $model->getJenis();
 
 		$error    	= null;
 		$success    = null;
@@ -216,18 +224,11 @@ class SalesOrderController extends MainController {
 				for ($i=0; $i < count($kdbrg); $i++) {
 					//get id jenis setiap barang
 					$brg=$model->getBarang($_POST['kd_brg'][$i]);
-					foreach ($brg as $brgny ) {
-						if ($brgny->id_jenis == '') {
-							$idjenis = '0';
-						} else {
-							$idjenis = $brgny->id_jenis;
-						}
-					}
 
 					if ($_POST['iddetail'][$i]=='' && $_POST['qty'][$i]!=='0') {
 						//insert detail
 						$dataDet['kode_brg'] = $_POST['kd_brg'][$i];
-						$dataDet['id_jenis'] = $idjenis;
+						$dataDet['id_jenis'] = $_POST['jenis'][$i];
 						$dataDet['id_barang'] = $_POST['id_brg'][$i];
 						$dataDet['id_trans'] = trim($_POST["idtrans"]);
 						$dataDet['harga'] = 0;
@@ -237,7 +238,7 @@ class SalesOrderController extends MainController {
 						$detail = $model->saveDetail($dataDet);
 					} else {
 						//update detail
-						$dataDet['id_jenis'] = $idjenis;
+						$dataDet['id_jenis'] = $_POST['jenis'][$i];
 						$dataDet['harga'] = 0;
 						$dataDet['id_karyawan'] = trim($_POST["iduser"]);
 						$dataDet['qty'] = $_POST['qty'][$i];
@@ -254,7 +255,7 @@ class SalesOrderController extends MainController {
 			}
 		}
 
-		$this->template('transaksi/frmsalesorder', array('customer' => $customer, 'so' => $data, 'custEdit' => $custEdit[0], 'success' => $success, 'error' => $error, 'title' => 'Ubah Data'));
+		$this->template('transaksi/frmsalesorder', array('customer' => $customer, 'jenis' => $jenis, 'so' => $data, 'custEdit' => $custEdit[0], 'jenisEdit' => $jenisEdit, 'success' => $success, 'error' => $error, 'title' => 'Ubah Data'));
 
 	}
 
@@ -270,6 +271,7 @@ class SalesOrderController extends MainController {
 					$arr_result[] = array(
 						'label'         => $row->id_barang,
 						'description'   => $row->kode_brg,
+						'nmbrg'  		=> $row->nm_barang,
 					);
 				echo json_encode($arr_result);
 			}

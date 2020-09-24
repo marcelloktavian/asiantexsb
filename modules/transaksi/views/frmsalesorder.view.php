@@ -172,6 +172,8 @@
 												<th style="display:none;">ID Detail</th>
 												<th>Kode Barang</th>
 												<th>ID Barang</th>
+												<th>Nama Barang</th>
+												<th>Kategori</th>
 												<th>Qty</th>
 												<th>Aksi</th>
 											</tr>
@@ -187,35 +189,48 @@
 													echo "<input type='hidden' name='kd_brg[]' id='kd_brg_".$i."'value='".$record->kode_brg."' ></td>";
 													echo "<td><p>".$record->id_barang."</p>";
 													echo "<input type='hidden' name='id_brg[]' id='id_brg_".$i."'value='".$record->id_barang."' ></td>";
-													echo "<td><input type='text' name='qty[]' id='qty_".$i."' size='3' style='text-align: right;' value='".$record->qty."' onkeyup='hitung()'></td>";
-													echo "<td><button type='button' data-toggle='tooltip' title='Hapus'class='btn btn-icon btn-round btn-danger' onclick='hapus(".$i.")'><i class='fa fa-times'></i></button></td></tr>";
-													$i++;
+													echo "<td><p>".$record->nm_barang."</p>";
+													echo "</td>";
+													echo "<td><select id='jenis' name='jenis'>";
+													echo "<option value='' disabled>-Pilih Kategori-</option>";
+
+													echo "<option value=".$record->id_jns." selected>".$record->jns."</option>";
+
+													foreach ($data["jenis"] as $jenisny) {
+														if($jenisny->id_jenis !== $record->id_jns){
+															?>
+															<option value='<?= $jenisny->id_jenis ?>'><?= $jenisny->nm_jenis ?></option> 
+														<?php } };
+														echo "</select></td>";
+														echo "<td><input type='text' name='qty[]' id='qty_".$i."' size='3' style='text-align: right;' value='".$record->qty."' onkeyup='hitung()'></td>";
+														echo "<td><button type='button' data-toggle='tooltip' title='Hapus'class='btn btn-icon btn-round btn-danger' onclick='hapus(".$i.")'><i class='fa fa-times'></i></button></td></tr>";
+														$i++;
+													}
 												}
-											}
-											?>
-										</tbody>
-									</table>
-								</form>
+												?>
+											</tbody>
+										</table>
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<script>
-		var modal = document.getElementById('ModalScan');
+		<script>
+			var modal = document.getElementById('ModalScan');
 
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = "none";
-				decoder.stop();
+			window.onclick = function(event) {
+				if (event.target == modal) {
+					modal.style.display = "none";
+					decoder.stop();
+				}
 			}
-		}
 
-		var arg = {
-			resultFunction: function(result) {
+			var arg = {
+				resultFunction: function(result) {
 				// var barang = result.code.split("/");
 				var barang = result.code;
 
@@ -227,7 +242,7 @@
 					success: function(response) {
 						var datanya = JSON.parse(response);
 						// console.log(datanya[0].kode_brg);
-						BarisBaru('',datanya[0].kode_brg, datanya[0].id_barang,'0');
+						BarisBaru('',datanya[0].kode_brg, datanya[0].id_barang, datanya[0].nm_barang, '0');
 						// alert(response); 
 					}
 				});
@@ -257,35 +272,35 @@
 				source: "<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=autobarang",
 
 				select: function (event, ui) {
-					BarisBaru('',ui.item.description, ui.item.label,'0');
+					BarisBaru('',ui.item.description, ui.item.label, ui.item.nmbrg,'0');
 				}
 			});
 		});
 
-		function BarisBaru($iddetail, $kd_brg, $id_brg, $qty) {
+		function BarisBaru($iddetail, $kd_brg, $id_brg, $nmbrg, $qty) {
 
 			var kondisi='T';
 
-			$('#tbl_keranjang tbody tr').each(function(){
+			// $('#tbl_keranjang tbody tr').each(function(){
 
-				var idbrg = $(this).find('td:nth-child(3) p').text();
+			// 	var idbrg = $(this).find('td:nth-child(3) p').text();
 
-				if ($id_brg==idbrg) {
-					kondisi='Y';
-				}
-			});
+			// 	if ($id_brg==idbrg) {
+			// 		kondisi='Y';
+			// 	}
+			// });
 
-			if(kondisi=='Y'){
-				Swal.fire({
-					title: 'Gagal',
-					text: "Barang sudah ada di keranjang.",
-					icon: 'error',
-					showCancelButton: false,
-					confirmButtonText: 'OK',
-					confirmButtonColor: '#3085d6',
-					reverseButtons: false
-				});
-			}else{
+			// if(kondisi=='Y'){
+			// 	Swal.fire({
+			// 		title: 'Gagal',
+			// 		text: "Barang sudah ada di keranjang.",
+			// 		icon: 'error',
+			// 		showCancelButton: false,
+			// 		confirmButtonText: 'OK',
+			// 		confirmButtonColor: '#3085d6',
+			// 		reverseButtons: false
+			// 	});
+			// }else{
 				totalbaris += 1;
 			// console.log(totalbaris);
 			var Nomor = $('#tbl_keranjang tbody tr').length + 1;
@@ -298,6 +313,16 @@
 			Baris += "<input type='hidden' name='kd_brg[]' id='kd_brg_"+totalbaris+"'value='"+$kd_brg+"' ></td>";
 			Baris += "<td><p>"+$id_brg+"</p>";
 			Baris += "<input type='hidden' name='id_brg[]' id='id_brg_"+totalbaris+"'value='"+$id_brg+"' ></td>";
+			Baris += "<td><p>"+$nmbrg+"</p>";
+			Baris += "</td>";
+
+			Baris += "<td><select id='jenis_"+totalbaris+"' name='jenis[]'>";
+			Baris += "<option value='' disabled>-Pilih Kategori-</option>";
+			Baris += "<?php foreach ($data['jenis'] as $jenisny) { ?>";
+			Baris += "<option value='<?= $jenisny->id_jenis ?>'><?= $jenisny->nm_jenis ?></option>";
+			Baris += "<?php }; ?>";
+			Baris += "</select></td>";
+
 			Baris += "<td>";
 			Baris += "<input type='text' name='qty[]' id='qty_"+totalbaris+"' size='3' style='text-align: right;' value='"+$qty+"' onkeyup='hitung()'>";
 			Baris += "</td>";
@@ -307,12 +332,12 @@
 			var input = $('#tbl_keranjang tbody').append(Baris);
 
 			$('#tbl_keranjang tbody tr').each(function(){
-				$(this).find('td:nth-child(4) input').focus();
+				$(this).find('td:nth-child(6) input').focus();
 			});
 
 			$('[data-toggle="tooltip"]').tooltip();
 			hitung();
-		}
+		// }
 	}
 
 	function hitung() {
@@ -320,12 +345,12 @@
 
 		$('#tbl_keranjang tbody tr').each(function(){
 
-			var qty = $(this).find('td:nth-child(4) input').val();
+			var qty = $(this).find('td:nth-child(6) input').val();
 
-			if ($(this).find('td:nth-child(4) input').val() == '') {
+			if ($(this).find('td:nth-child(6) input').val() == '') {
 				qty='0';
 			} else {
-				qty = $(this).find('td:nth-child(4) input').val();
+				qty = $(this).find('td:nth-child(6) input').val();
 			}
 
 			Total = parseInt(Total) + parseInt(qty);
