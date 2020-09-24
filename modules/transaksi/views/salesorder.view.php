@@ -45,7 +45,10 @@
 								foreach($data["salesorder"] as $so) {
 									?>
 									<tr>
-										<td></td>
+										<td>
+										<button type="button" data-toggle="tooltip" title="Detail Data" class="btn btn-icon btn-round btn-info">
+										<i class="fa fa-eye"></i>
+										</button></td>
 										<td><?= $no; ?></td>
 										<td><?= $so->id_trans; ?></td>
 										<td><?= $so->namaperusahaan; ?></td>

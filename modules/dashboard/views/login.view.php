@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="resources/assets/images/logo.ico" type="image/x-icon"/>
 
-    <title>Login Asiantex</title>
+    <title>Login</title>
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="resources/assets/plugins/bootstrap/css/bootstrap.css" />

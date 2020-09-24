@@ -11,6 +11,7 @@
 </style>
 <div class="page-inner">
 	<div class="page-header">
+		<!-- Header -->
 		<h4 class="page-title"><?php echo $data["title"]; ?></h4>
 		<ul class="breadcrumbs">
 			<li class="nav-home">
@@ -31,6 +32,7 @@
 				<a href="#"><?php echo $data["title"]; ?></a>
 			</li>
 		</ul>
+		<!-- End Header -->
 	</div>
 	<div class="row">
 		<div class="col-md-12">
@@ -96,7 +98,7 @@
 											<input type="hidden" name="totqty" id="totqty" value="<?php if($_GET['action']=='update'){echo $data["custEdit"]->totalqty;}else{echo "0";} ?>">
 
 											<!-- Select Customer -->
-											<select class="form-control selectpicker" id="customer" name="customer" data-live-search="true" data-size="5">
+											<select class="form-control selectpicker" id="customer" name="customer" data-live-search="true" data-size="5" required>
 												<?php
 												if ($_GET['action']=='insert') {
 													echo "<option value='' disabled selected>-Pilih Customer-</option>";
@@ -114,21 +116,6 @@
 										</div>
 									</div>
 
-									<!-- <label for="kode" class="col-md-3">Kode</label>
-									<div class="col-md-12 p-0">
-										<div class="input-group mb-3"> -->
-											<!-- Kode -->
-											<!-- <input class="form-control" type="text" name="kode" id="kode" placeholder="Masukkan Kode" required>
-										</div>
-									</div>
-
-									<label for="keterangan" class="col-md-3">Keterangan</label>
-									<div class="col-md-12 p-0">
-										<div class="input-group mb-3"> -->
-											<!-- Keterangan -->
-											<!-- <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan"></textarea>
-										</div>
-									</div> -->
 								</div>
 								<div class="row row-demo-grid">
 									<div class="col">
