@@ -122,11 +122,6 @@
 			url: '<?php echo SITE_URL; ?>?file=dashboard&&page=home&&action=ajaxchartjs',
 			success: function(data) {
 				var databulan = JSON.parse(data);
-				// console.log(test);
-				// for(var i = 0; i < databulan.length; i++){
-					// console.log(data[8].totalbulan);
-					// console.log(databulan[8].totalbulan);
-				// }
 					var myBarChart = new Chart(barChart, {
 					type: 'bar',
 					data: {
