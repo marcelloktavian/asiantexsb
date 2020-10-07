@@ -3,7 +3,7 @@
     $file = (isset($_GET['file']) && $_GET['file']) ? $_GET['file'] : '';
 
     // ini konfigurasi untuk websitenya
-    define('PATH','http://localhost:8080/asiantexsb/'); // isi dari path websitenya
+    define('PATH','http://localhost/asiantexsb/'); // isi dari path websitenya
     define('SITE_URL',PATH.'index.php');
     define('POSITION_URL',PATH.'?file='.$file.'&&page='.$page);
 

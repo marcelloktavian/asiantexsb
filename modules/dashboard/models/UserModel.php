@@ -13,7 +13,7 @@ class UserModel extends Model{
 
 	public function get_total()
 	{
-		$sql = "SELECT count(*) as jumlah FROM `trsalesorder` WHERE (deleted=0 AND state=0) and substr(id_trans,4,4) = concat(substr(CURDATE(),3,2),substr(CURDATE(),6,2))";
+		$sql = "SELECT count(*) as jumlah FROM `trsalesorder` WHERE deleted=0 and substr(id_trans,4,4) = concat(substr(CURDATE(),3,2),substr(CURDATE(),6,2))";
 
 		$this->db->query($sql);
 

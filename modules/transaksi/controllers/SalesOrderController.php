@@ -13,6 +13,13 @@ class SalesOrderController extends MainController {
 		$this->template('transaksi/salesorder', array('salesorder' => $data));
 	}
 
+	public function ajaxchartjs() {
+		$this->model('salesorder','transaksi');
+		$model = new SalesOrderModel();
+		$dataTotal = $model->getChart();
+		echo json_encode($dataTotal);
+	}
+
 	public function ajaxbarang() {
 		if (isset($_POST['barang']) && $_POST['barang'] != "") { 
 			$this->model('salesorder','transaksi');

@@ -119,7 +119,7 @@
 
 	var barChart = document.getElementById('barChart').getContext('2d');
 	$.ajax({
-			url: '<?php echo SITE_URL; ?>?file=dashboard&&page=home&&action=ajaxchartjs',
+			url: '<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=ajaxchartjs',
 			success: function(data) {
 				var databulan = JSON.parse(data);
 					var myBarChart = new Chart(barChart, {
