@@ -25,13 +25,43 @@
 				<h4 class="text-section">Menu</h4>
 			</li>
 
-			<!-- Sales Order -->
-			<li class="nav-item <?php if($_GET['page']=='salesorder' ) echo 'active'?>">
-				<a href="<?php echo PATH; ?>index.php?file=transaksi&&page=salesorder">
-					<i class="fas fa-shopping-cart"></i>
-					<p>Sales Order</p>
-				</a>
-			</li>
+			<?php
+			if($data["login"]->group_id == '1'){
+				?>
+				<!-- Barang -->
+				<li class="nav-item <?php if($_GET['page']=='barang' ) echo 'active'?>">
+					<a href="<?php echo PATH; ?>index.php?file=master&&page=barang">
+						<i class="fas fa-box"></i>
+						<p>Data Barang</p>
+					</a>
+				</li>
+				<?php
+			}
+
+			if ($data["login"]->group_id == '1' || $data["login"]->group_id == '4') {
+				?>
+				<!-- Sales Order -->
+				<li class="nav-item <?php if($_GET['page']=='salesorder' ) echo 'active'?>">
+					<a href="<?php echo PATH; ?>index.php?file=transaksi&&page=salesorder">
+						<i class="fas fa-shopping-cart"></i>
+						<p>Sales Order</p>
+					</a>
+				</li>
+				<?php
+			}
+
+			if ($data["login"]->group_id == '1' || $data["login"]->group_id == '5') {
+				?>
+				<!-- Sales Order -->
+				<li class="nav-item <?php if($_GET['page']=='lapsalesorder' ) echo 'active'?>">
+					<a href="<?php echo PATH; ?>index.php?file=laporan&&page=lapsalesorder">
+						<i class="fas fa-file"></i>
+						<p>Laporan</p>
+					</a>
+				</li>
+				<?php
+			}
+			?>		
 
 		</ul>
 	</div>

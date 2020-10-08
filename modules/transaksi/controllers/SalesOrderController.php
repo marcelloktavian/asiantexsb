@@ -17,7 +17,19 @@ class SalesOrderController extends MainController {
 		$this->model('salesorder','transaksi');
 		$model = new SalesOrderModel();
 		$dataTotal = $model->getChart();
+
 		echo json_encode($dataTotal);
+	}
+
+	public function ajaxconfirm() {
+		if (isset($_POST['login']) && $_POST['login'] != "") {
+			$user = '13'; 
+			$this->model('salesorder','transaksi');
+			$model = new SalesOrderModel();
+			$data = $model->getConfirm($user, $_POST['login']);
+
+			echo json_encode($data);
+		} 
 	}
 
 	public function ajaxbarang() {

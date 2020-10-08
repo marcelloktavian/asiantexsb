@@ -27,10 +27,14 @@ class LoginController extends Controller {
 
 			if(count($user) > 0) {
 				//berhasil masuk
-				$masuk = true;
-				$_SESSION["loginasiantexsb"] = $user[0];
+				if ($user[0]->group_id == '1' || $user[0]->group_id =='4' || $user[0]->group_id =='5') {
+					$masuk = true;
+					$_SESSION["loginasiantexsb"] = $user[0];
 
-				$this->redirect('index.php');
+					$this->redirect('index.php');
+				}else {
+					$masuk = false;
+				}
 			}
 		}
 		$view = $this->view('dashboard/login')->bind('masuk', $masuk);

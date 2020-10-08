@@ -56,13 +56,13 @@
 											<td><?= $so->totalqty; ?></td>
 											<td>
 												<div class="form-button-action">
-													<button type="button" data-toggle="tooltip" title="Post Data" onclick="alert('<?= $so->id_trans ?>','posting')" class="btn btn-icon btn-round btn-warning">
+													<button type="button" data-toggle="tooltip" title="Post Data" onclick="alert('<?= $so->id_trans ?>','posting','<?= $data["login"]->user_id ?>')" class="btn btn-icon btn-round btn-warning">
 														<i class="fa fa-share"></i>
 													</button>
 													<button type="button" data-toggle="tooltip" title="Ubah Data" onclick="window.location.href='<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=update&&id=<?php echo $so->id_trans; ?>';" class="btn btn-icon btn-round btn-primary">
 														<i class="fa fa-edit"></i>
 													</button>
-													<button type="button" data-toggle="tooltip" title="Hapus Data" onclick="alert('<?= $so->id_trans ?>','hapus')" class="btn btn-icon btn-round btn-danger">
+													<button type="button" data-toggle="tooltip" title="Hapus Data" onclick="alert('<?= $so->id_trans ?>','hapus','<?= $data["login"]->user_id ?>')" class="btn btn-icon btn-round btn-danger">
 														<i class="fa fa-trash"></i>
 													</button>
 												</td>
@@ -155,32 +155,81 @@
 					});
 				}
 
-				function alert($id, $kondisi) {
-					var id 		= $id;
+				function alert($id, $kondisi, $iduser) {
+					var id = $id;
+					var user = $iduser;
 
+					//posting
 					if ($kondisi=='posting') {
 						var kond = 'memposting';
-					} else if($kondisi=='hapus'){
-						var kond = 'menghapus';
-					}
-					Swal.fire({
-						title: 'Konfirmasi',
-						text: "Anda ingin "+kond+" "+id+"?",
-						icon: 'warning',
-						showCancelButton: true,
-						confirmButtonText: 'Ya',
-						confirmButtonColor: '#d33',
-						cancelButtonColor: '#3085d6',
-						cancelButtonText: 'Tidak',
-						reverseButtons: false
-					}).then((result) => {
-						if (result.value) {
-							if ($kondisi=='posting') {
+
+						Swal.fire({
+							title: 'Konfirmasi',
+							text: "Anda ingin "+kond+" "+id+"?",
+							icon: 'warning',
+							showCancelButton: true,
+							confirmButtonText: 'Ya',
+							confirmButtonColor: '#d33',
+							cancelButtonColor: '#3085d6',
+							cancelButtonText: 'Tidak',
+							reverseButtons: false
+						}).then((result) => {
+							if (result.value) {
 								window.location.href="<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=posting&&id="+id+"";
-							} else {
-								window.location.href="<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=delete&&id="+id+"";
 							}
-						}
-					});
+						});
+
+					} else if($kondisi=='hapus'){
+						//delete
+						var kond = 'menghapus';
+
+						Swal.fire({
+							title: 'Konfirmasi',
+							text: "Anda ingin "+kond+" "+id+"?",
+							icon: 'warning',
+							showCancelButton: true,
+							confirmButtonText: 'Ya',
+							confirmButtonColor: '#d33',
+							cancelButtonColor: '#3085d6',
+							cancelButtonText: 'Tidak',
+							reverseButtons: false
+						}).then((result) => {
+							if (result.value) {
+
+								Swal.fire({
+									title: 'Masukan Password Anda',
+									input: 'password',
+									inputAttributes: {
+										autocapitalize: 'off'
+									},
+									showCancelButton: true,
+									confirmButtonText: 'Confirm',
+									showLoaderOnConfirm: true,
+									preConfirm: (login) => {
+
+										$.ajax({
+											type: 'POST',
+											url: '<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=ajaxconfirm',
+											data: { login: login },
+											dataType :"text",
+											success: function(response) {
+												var datanya = JSON.parse(response);
+												if (datanya[0].jumlah == '0') {
+													Swal.fire({
+														title: 'Password Salah',
+														icon: 'error',
+														});
+												} else {
+													window.location.href="<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=delete&&id="+id+"";
+												}
+											}
+										});
+
+									},
+									allowOutsideClick: () => !Swal.isLoading()
+								});
+							}
+						});
+					}
 				};
 			</script>

@@ -50,6 +50,17 @@ class SalesOrderModel extends Model{
 		return $this->db->execute()->toObject();
 	}
 
+	public function getConfirm($user, $pass)
+	{
+		$sql = "SELECT count(*) as jumlah FROM `user` WHERE user_id='".$user."' AND password=md5('".$pass."')";
+
+		// var_dump($sql);
+		// die;
+		$this->db->query($sql);
+
+		return $this->db->execute()->toObject();
+	}
+
 	public function getID($id)
 	{
 		$sql = "SELECT det.*, brg.nm_barang, det.id_jenis as id_jns, jb.nm_jenis AS jns FROM `trsalesorder_detail` det INNER JOIN barang brg on brg.kode_brg=det.kode_brg INNER JOIN jenis_barang jb ON jb.id_jenis=det.id_jenis WHERE det.id_trans='".$id."'";
