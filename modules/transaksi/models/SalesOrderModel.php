@@ -63,7 +63,7 @@ class SalesOrderModel extends Model{
 
 	public function getID($id)
 	{
-		$sql = "SELECT det.*, brg.nm_barang, det.id_jenis as id_jns, jb.nm_jenis AS jns FROM `trsalesorder_detail` det INNER JOIN barang brg on brg.kode_brg=det.kode_brg INNER JOIN jenis_barang jb ON jb.id_jenis=det.id_jenis WHERE det.id_trans='".$id."'";
+		$sql = "SELECT det.*, brg.nm_barang, det.id_jenis as id_jns, jb.nm_jenis AS jns FROM `trsalesorder_detail` det INNER JOIN barang brg on brg.kode_brg=det.kode_brg INNER JOIN jenis_barang jb ON jb.id_jenis=det.id_jenis WHERE det.id_trans='".$id."' ORDER BY brg.nm_barang ASC";
 
 		$this->db->query($sql);
 

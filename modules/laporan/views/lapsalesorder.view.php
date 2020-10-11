@@ -26,19 +26,34 @@
 					</div>
 				</div>
 				<div class="card-body">
-					<div class="table-responsive">
-						<table id="tabelmaster" class="display table table-striped table-hover" >
-							<thead>
-								<tr>
-									<th width="5%">No</th>
-									<th>ID Trans</th>
-									<th>Customer</th>
-									<th>Tanggal Trans</th>
-									<th>Qty</th>
-									<th width="5%">Aksi</th>
-								</tr>
-							</thead>
-							<tbody id="listso">
+					<div class="form-group"><label for="customer" class="col-md-3">Filter Tanggal (Dari-Sampai)</label>
+						<div class="col-md-12 p-0">
+							<div class="input-group mb-3">
+								<!-- Dari Tanggal -->
+								<input class="form-control" type="month" placeholder="Dari" id="daritgl" name="daritgl" required>
+								<!-- Sampai Tanggal -->
+								<input class="form-control" type="month" placeholder="Sampai" id="sampaitgl" name="sampaitgl" required>
+							</select>
+							<div class="input-group-append">
+								<button type="submit" value="Cari" class="btn btn-success" id="cari" onclick="cari()">Cari</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table id="tabelmaster" class="display table table-striped table-hover" >
+						<thead>
+							<tr>
+								<th width="5%">No</th>
+								<th>ID Trans</th>
+								<th>Customer</th>
+								<th>Tanggal Trans</th>
+								<th>Qty</th>
+								<th width="5%">Aksi</th>
+							</tr>
+						</thead>
+						<tbody id="listso">
 								<!-- <?php
 								$no = 1;
 								foreach($data["salesorder"] as $so) {
@@ -107,9 +122,7 @@
 
 	<script>
 		$(document).ready(function(){
-			show_so();
-
-			$('#tabelmaster').DataTable({
+			table = $('#tabelmaster').DataTable({
 				"lengthMenu": [[5, 15, 30,-1], [5, 15, 30, "All"]]
 			});
 			$('[data-toggle="tooltip"]').tooltip(); 
@@ -121,10 +134,26 @@
 			$('#ModalDetail').modal('show');
 		}
 
-		function show_so() {
+		function cari() {
+			if($('#daritgl').val() !== '' && $('#sampaitgl').val() !== ''){
+				table.destroy();
+				show_so($('#daritgl').val(), $('#sampaitgl').val());
+				table = $('#tabelmaster').DataTable({
+					"lengthMenu": [[5, 15, 30,-1], [5, 15, 30, "All"]]
+				});
+			}else{
+				Swal.fire(
+					'ERROR',
+					'Silahkan Isi Filter Tanggal',
+					'error'
+					)
+			}
+		}
+
+		function show_so(dari, sampai) {
 			$.ajax({
 				type : "ajax",
-				url : "<?php echo SITE_URL; ?>?file=laporan&&page=lapsalesorder&&action=ajaxso",
+				url : "<?php echo SITE_URL; ?>?file=laporan&&page=lapsalesorder&&action=ajaxso&&dari="+dari+"&&sampai="+sampai,
 				dataType : "json",
 				async : false,
 				success: function (response) {
@@ -144,7 +173,9 @@
 						"'"+response[i].id_trans+"')"+
 						'">'+
 						'<i class="fa fa-eye"></i></button>'+
-						'<button type="button" data-toggle="tooltip" title="Export Data"  class="btn btn-icon btn-round btn-warning">'+
+						'<button type="button" data-toggle="tooltip" class="btn btn-icon btn-round btn-warning" title="Export Data" onclick="exportsatuan('+
+						"'"+response[i].id_trans+"')"+
+						'">'+
 						'<i class="fa fa-file-export"></i>'+
 						'</button></div></td>'+
 						'</tr>';
@@ -169,6 +200,11 @@
 			var tahun = date.getFullYear();
 			var output = hari+' '+bulan+' '+tahun;
 			return output;
+		}
+
+		function exportsatuan(idtrans) {
+			// alert(idtrans);
+			window.open('<?php echo SITE_URL; ?>?file=laporan&&page=lapsalesorder&&action=pdf&&idtrans='+idtrans, '_blank');
 		}
 
 		function listData(idtrans) {

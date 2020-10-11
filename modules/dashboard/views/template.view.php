@@ -65,6 +65,7 @@ $page = (isset($_GET['page']) && $_GET['page']) ? $_GET['page'] : 'dashboard/hom
 	<script src="resources/assets/plugins/toastr/toastr.js"></script>
 	<script src="resources/assets/plugins/barcode/qrcodelib.js"></script>
 	<script src="resources/assets/plugins/barcode/webcodecamjquery.js"></script>
+	<script src="resources/assets/plugins/jquery-redirect/jquery.redirect.js"></script>
 
 </head>
 <body>

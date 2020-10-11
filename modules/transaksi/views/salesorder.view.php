@@ -123,14 +123,6 @@
 
 				});
 
-				// $('.btn-show').on('click',function(){
-
-				// 	var id = $(this).data('idtrans');
-				// 	listData(id);
-				// 	$('#idso').text(id+')');
-				// 	$('#ModalDetail').modal('show');
-				// });
-
 				function dataso($id) {
 					listData($id);
 					$('#idso').text($id+')');
