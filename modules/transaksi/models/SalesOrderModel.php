@@ -4,7 +4,7 @@ class SalesOrderModel extends Model{
 
 	public function get_data()
 	{
-		$sql = "SELECT * FROM `trsalesorder` tso INNER JOIN `tblsupplier` ts ON tso.`id_supplier`=ts.`id` where tso.deleted=0 and tso.state=0 ORDER BY SUBSTRING(tso.`id_trans`,4,2) ASC, SUBSTRING(tso.`id_trans`,6,2) ASC";
+		$sql = "SELECT * FROM `trsalesorder` tso INNER JOIN `tblsupplier` ts ON tso.`id_supplier`=ts.`id` where tso.deleted=0 and tso.state=0 ORDER BY SUBSTRING(tso.`id_trans`,4,2) DESC, SUBSTRING(tso.`id_trans`,6,2) DESC, SUBSTRING(tso.`id_trans`,8,4) DESC";
 
 		$this->db->query($sql);
 

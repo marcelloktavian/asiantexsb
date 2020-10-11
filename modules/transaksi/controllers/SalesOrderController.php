@@ -13,6 +13,15 @@ class SalesOrderController extends MainController {
 		$this->template('transaksi/salesorder', array('salesorder' => $data));
 	}
 
+	public function ajaxso() {
+		$this->model('salesorder','transaksi');
+		$model = new SalesOrderModel();
+
+		$data = $model->get_data();
+
+		echo json_encode($data);
+	}
+
 	public function ajaxchartjs() {
 		$this->model('salesorder','transaksi');
 		$model = new SalesOrderModel();

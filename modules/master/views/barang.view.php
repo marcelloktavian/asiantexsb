@@ -50,8 +50,8 @@
 
 	<script>
 		$(document).ready(function(){
-			show_dataBarang();
 
+			show_dataBarang();
 
 			$('#tabelmaster').DataTable({
 				"lengthMenu": [[5, 15, 30,-1], [5, 15, 30, "All"]]

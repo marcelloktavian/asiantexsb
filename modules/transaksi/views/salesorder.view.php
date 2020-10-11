@@ -39,14 +39,14 @@
 									<th width="5%">Aksi</th>
 								</tr>
 							</thead>
-							<tbody>
-								<?php
+							<tbody id="listso">
+								<!-- <?php
 								$no = 1;
 								foreach($data["salesorder"] as $so) {
 									?>
 									<tr>
 										<td>
-											<button type="button" class="btn btn-icon btn-round btn-info btn-show" data-idtrans="<?= $so->id_trans; ?>">
+											<button type="button" class="btn btn-icon btn-round btn-info btn-show" data-toggle="tooltip" title="Show Data" data-idtrans="<?= $so->id_trans; ?>">
 												<i class="fa fa-eye"></i>
 											</button></td>
 											<td><?= $no; ?></td>
@@ -65,12 +65,13 @@
 													<button type="button" data-toggle="tooltip" title="Hapus Data" onclick="alert('<?= $so->id_trans ?>','hapus','<?= $data["login"]->user_id ?>')" class="btn btn-icon btn-round btn-danger">
 														<i class="fa fa-trash"></i>
 													</button>
+													</div
 												</td>
 											</tr>
 											<?php
 											$no++;
 										}
-										?>
+										?> -->
 									</tbody>
 								</table>
 							</div>
@@ -84,7 +85,7 @@
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="ModalDetailLabel">Detail Sales Order</h5>
+							<h5 class="modal-title" id="ModalDetailLabel">Detail Sales Order (</h5><h5 id="idso"></h5>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
@@ -113,6 +114,7 @@
 
 			<script>
 				$(document).ready(function(){
+					show_so();
 
 					$('#tabelmaster').DataTable({
 						"lengthMenu": [[5, 15, 30,-1], [5, 15, 30, "All"]]
@@ -121,12 +123,78 @@
 
 				});
 
-				$('.btn-show').on('click',function(){
+				// $('.btn-show').on('click',function(){
 
-					var id = $(this).data('idtrans');
-					listData(id);
+				// 	var id = $(this).data('idtrans');
+				// 	listData(id);
+				// 	$('#idso').text(id+')');
+				// 	$('#ModalDetail').modal('show');
+				// });
+
+				function dataso($id) {
+					listData($id);
+					$('#idso').text($id+')');
 					$('#ModalDetail').modal('show');
-				});
+				}
+
+
+				function show_so() {
+					$.ajax({
+						type : "ajax",
+						url : "<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=ajaxso",
+						dataType : "json",
+						async : false,
+						success: function (response) {
+							var html = '';
+							var i;
+							var count = 1;
+							for (i = 0; i < response.length; i++) {
+								html += '<tr>' +
+								'<td><button type="button" class="btn btn-icon btn-round btn-info" data-toggle="tooltip" title="Show Data" onclick="dataso('+
+								"'"+response[i].id_trans+"')"+
+								'">'+
+								'<i class="fa fa-eye"></i></button></td>'+
+								'<td>'+count+'</td>'+
+								'<td>'+response[i].id_trans+'</td>'+
+								'<td>'+response[i].namaperusahaan+'</td>'+
+								"<td>"+tanggal(response[i].tgl_trans)+"</td>"+
+								'<td>'+response[i].totalqty+'</td>'+
+								'<td><div class="form-button-action">'+
+								'<button type="button" data-toggle="tooltip" title="Post Data" onclick="konfirmasi('+
+								"'"+response[i].id_trans+"', 'posting', '<?= $data["login"]->user_id ?>')"+ 
+								'" class="btn btn-icon btn-round btn-warning"><i class="fa fa-share"></i>'+
+								'</button>'+
+								'<button type="button" data-toggle="tooltip" title="Ubah Data" onclick="window.location.href='+
+								"'<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=update&&id="+response[i].id_trans+"'"+
+								'"class="btn btn-icon btn-round btn-primary"><i class="fa fa-edit"></i>'+
+								'</button>'+
+								'<button type="button" data-toggle="tooltip" title="Hapus Data" onclick="konfirmasi('+
+								"'"+response[i].id_trans+"', 'hapus', '<?= $data["login"]->user_id ?>') "+
+								'" class="btn btn-icon btn-round btn-danger"><i class="fa fa-trash"></i>'+
+								'</button>'+
+								'</div></td>'+
+								'</tr>';
+
+								count++;
+							}
+							// console.log(html);
+							$('#listso').html(html);
+						}
+					});
+				}
+
+				function tanggal(tgl) {
+					var date = new Date(tgl);
+					var hari = date.getDate();
+					if (hari<10) {
+						hari = '0'+date.getDate();
+					}
+					var list = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+					var bulan = list[date.getMonth()];
+					var tahun = date.getFullYear();
+					var output = hari+' '+bulan+' '+tahun;
+					return output;
+				}
 
 				function listData(idtrans) {
 					$.ajax({
@@ -155,7 +223,7 @@
 					});
 				}
 
-				function alert($id, $kondisi, $iduser) {
+				function konfirmasi($id, $kondisi, $iduser) {
 					var id = $id;
 					var user = $iduser;
 
@@ -218,7 +286,7 @@
 													Swal.fire({
 														title: 'Password Salah',
 														icon: 'error',
-														});
+													});
 												} else {
 													window.location.href="<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=delete&&id="+id+"";
 												}
