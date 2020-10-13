@@ -111,7 +111,7 @@
 												<?php } ?>
 											</select>
 											<div class="input-group-append">
-												<button type="submit" value="Simpan" class="btn btn-success">Simpan</button>
+												<button type="submit" value="Simpan" class="btn btn-primary">Simpan</button>
 											</div>
 										</div>
 									</div>
@@ -137,7 +137,7 @@
 
 
 											<div class="input-group-append">
-												<button type="button" value="Scan" id="scan" onclick="decoder.play();" class="btn btn-info" data-toggle="modal" data-target="#ModalScan">Scan</button>
+												<button type="button" value="Scan" id="scan" onclick="decoder.play();" class="btn btn-primary" data-toggle="modal" data-target="#ModalScan">Scan</button>
 											</div>
 										</div>
 									</div>
@@ -157,7 +157,7 @@
 														<select id="cam"></select></center>
 													</div>
 													<div class="modal-footer">
-														<button type="button" onclick="decoder.stop();" class="btn btn-info" data-dismiss="modal">Close</button>
+														<button type="button" onclick="decoder.stop();" class="btn btn-primary" data-dismiss="modal">Close</button>
 													</div>
 												</div>
 											</div>

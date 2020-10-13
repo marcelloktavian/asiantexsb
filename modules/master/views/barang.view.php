@@ -21,10 +21,8 @@
 				<div class="card-header">
 					<div class="d-flex align-items-center">
 						<h4 class="card-title">Data Barang</h4>
-						<a class="btn btn-primary btn-round ml-auto" href="" class="btn btn-primary"><i class="fas fa-file-export"></i>
-						Export</a>
-						<a class="btn btn-primary btn-round" href="" class="btn btn-primary"><i class="fas fa-file-import"></i>
-						Import</a>
+						<button type="button" value="Export" class="btn btn-primary btn-round ml-auto" id="cari" onclick="exportbrg()"><i class="fas fa-file-export"></i>  Export</button>
+						<button type="button" value="Export" class="btn btn-primary btn-round" id="cari" onclick="importbrg()"><i class="fas fa-file-import"></i>  Import</button>
 					</div>
 				</div>
 				<div class="card-body">
@@ -85,5 +83,10 @@
 					$('#listData').html(html);
 				}
 			});
+		}
+
+		function exportbrg() {
+			var value = $('.dataTables_filter input').val();
+			window.open('<?php echo SITE_URL; ?>?file=master&&page=barang&&action=exportbrg&&cari='+value, '_blank');
 		}
 	</script>

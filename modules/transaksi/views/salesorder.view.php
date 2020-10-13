@@ -106,7 +106,7 @@
 							</table>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 						</div>
 					</div>
 				</div>
@@ -158,11 +158,11 @@
 								'</button>'+
 								'<button type="button" data-toggle="tooltip" title="Ubah Data" onclick="window.location.href='+
 								"'<?php echo SITE_URL; ?>?file=transaksi&&page=salesorder&&action=update&&id="+response[i].id_trans+"'"+
-								'"class="btn btn-icon btn-round btn-primary"><i class="fa fa-edit"></i>'+
+								'"class="btn btn-icon btn-round btn-secondary"><i class="fa fa-edit"></i>'+
 								'</button>'+
 								'<button type="button" data-toggle="tooltip" title="Hapus Data" onclick="konfirmasi('+
 								"'"+response[i].id_trans+"', 'hapus', '<?= $data["login"]->user_id ?>') "+
-								'" class="btn btn-icon btn-round btn-danger"><i class="fa fa-trash"></i>'+
+								'" class="btn btn-icon btn-round btn-primary"><i class="fa fa-trash"></i>'+
 								'</button>'+
 								'</div></td>'+
 								'</tr>';

@@ -21,39 +21,40 @@
 				<div class="card-header">
 					<div class="d-flex align-items-center">
 						<h4 class="card-title">Laporan Sales Order</h4>
-						<a class="btn btn-primary btn-round ml-auto" href="" class="btn btn-primary"><i class="fas fa-file-export"></i>
-						Export</a>
-					</div>
+						<button type="button" value="Export" class="btn btn-primary btn-round ml-auto" id="cari" onclick="exportallpdf()"><i class="fas fa-file-pdf"></i>  Pdf</button>
+						<button type="button" value="Export" class="btn btn-primary btn-round" id="cari" onclick="exportallexcel()"><i class="fas fa-file-excel"></i>  Excel</button>
+					</a>
 				</div>
-				<div class="card-body">
-					<div class="form-group"><label for="customer" class="col-md-3">Filter Tanggal (Dari-Sampai)</label>
-						<div class="col-md-12 p-0">
-							<div class="input-group mb-3">
-								<!-- Dari Tanggal -->
-								<input class="form-control" type="month" placeholder="Dari" id="daritgl" name="daritgl" required>
-								<!-- Sampai Tanggal -->
-								<input class="form-control" type="month" placeholder="Sampai" id="sampaitgl" name="sampaitgl" required>
-							</select>
-							<div class="input-group-append">
-								<button type="submit" value="Cari" class="btn btn-success" id="cari" onclick="cari()">Cari</button>
-							</div>
+			</div>
+			<div class="card-body">
+				<div class="form-group"><label for="customer" class="col-md-3">Filter Tanggal (Dari-Sampai)</label>
+					<div class="col-md-12 p-0">
+						<div class="input-group mb-3">
+							<!-- Dari Tanggal -->
+							<input class="form-control" type="month" placeholder="Dari" id="daritgl" name="daritgl" required>
+							<!-- Sampai Tanggal -->
+							<input class="form-control" type="month" placeholder="Sampai" id="sampaitgl" name="sampaitgl" required>
+						</select>
+						<div class="input-group-append">
+							<button type="button" value="Cari" class="btn btn-primary" id="cari" onclick="cari()">Cari</button>
 						</div>
 					</div>
 				</div>
+			</div>
 
-				<div class="table-responsive">
-					<table id="tabelmaster" class="display table table-striped table-hover" >
-						<thead>
-							<tr>
-								<th width="5%">No</th>
-								<th>ID Trans</th>
-								<th>Customer</th>
-								<th>Tanggal Trans</th>
-								<th>Qty</th>
-								<th width="5%">Aksi</th>
-							</tr>
-						</thead>
-						<tbody id="listso">
+			<div class="table-responsive">
+				<table id="tabelmaster" class="display table table-striped table-hover" >
+					<thead>
+						<tr>
+							<th width="5%">No</th>
+							<th>ID Trans</th>
+							<th>Customer</th>
+							<th>Tanggal Trans</th>
+							<th>Qty</th>
+							<th width="5%">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="listso">
 								<!-- <?php
 								$no = 1;
 								foreach($data["salesorder"] as $so) {
@@ -114,7 +115,7 @@
 					</table>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
@@ -141,6 +142,7 @@
 				table = $('#tabelmaster').DataTable({
 					"lengthMenu": [[5, 15, 30,-1], [5, 15, 30, "All"]]
 				});
+				$('[data-toggle="tooltip"]').tooltip();
 			}else{
 				Swal.fire(
 					'ERROR',
@@ -173,11 +175,15 @@
 						"'"+response[i].id_trans+"')"+
 						'">'+
 						'<i class="fa fa-eye"></i></button>'+
-						'<button type="button" data-toggle="tooltip" class="btn btn-icon btn-round btn-warning" title="Export Data" onclick="exportsatuan('+
+						'<button type="button" data-toggle="tooltip" class="btn btn-icon btn-round btn-warning" title="Export PDF" onclick="exportsatuanpdf('+
 						"'"+response[i].id_trans+"')"+
 						'">'+
-						'<i class="fa fa-file-export"></i>'+
-						'</button></div></td>'+
+						'<i class="fas fa-file-pdf"></i></button>'+
+						'<button type="button" data-toggle="tooltip" class="btn btn-icon btn-round btn-secondary" title="Export Excel" onclick="exportsatuanexcel('+
+						"'"+response[i].id_trans+"')"+
+						'">'+
+						'<i class="fas fa-file-excel"></i></button>'+
+						'</div></td>'+
 						'</tr>';
 
 						count++;
@@ -202,9 +208,36 @@
 			return output;
 		}
 
-		function exportsatuan(idtrans) {
-			// alert(idtrans);
+		function exportsatuanpdf(idtrans) {
 			window.open('<?php echo SITE_URL; ?>?file=laporan&&page=lapsalesorder&&action=pdf&&idtrans='+idtrans, '_blank');
+		}
+
+		function exportsatuanexcel(idtrans) {
+			window.open('<?php echo SITE_URL; ?>?file=laporan&&page=lapsalesorder&&action=excel&&idtrans='+idtrans, '_blank');
+		}
+
+		function exportallpdf() {
+			if($('#daritgl').val() !== '' && $('#sampaitgl').val() !== ''){
+				window.open('<?php echo SITE_URL; ?>?file=laporan&&page=lapsalesorder&&action=pdfall&&dari='+$('#daritgl').val()+'&&sampai='+$('#sampaitgl').val(), '_blank');
+			}else{
+				Swal.fire(
+					'ERROR',
+					'Silahkan Isi Filter Tanggal',
+					'error'
+					)
+			}
+		}
+
+		function exportallexcel() {
+			if($('#daritgl').val() !== '' && $('#sampaitgl').val() !== ''){
+				window.open('<?php echo SITE_URL; ?>?file=laporan&&page=lapsalesorder&&action=excelall&&dari='+$('#daritgl').val()+'&&sampai='+$('#sampaitgl').val(), '_blank');
+			}else{
+				Swal.fire(
+					'ERROR',
+					'Silahkan Isi Filter Tanggal',
+					'error'
+					)
+			}
 		}
 
 		function listData(idtrans) {
