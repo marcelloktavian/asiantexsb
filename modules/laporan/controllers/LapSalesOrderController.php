@@ -65,14 +65,14 @@ class LapSalesOrderController extends MainController {
 			$detail = $detail.'<tr><td align="left">'.$no.'</td>';
 
 			if ($row->tgl_trans==$tgl) {
-				$detail = $detail.'<td align="center"></td>';
+				$detail = $detail.'<td align="center">-</td>';
 			}else{
 				$detail = $detail.'<td align="center">'.$row->tgl_trans.'</td>';
 			}
 			$tgl = $row->tgl_trans;
 
 			if ($row->id_trans==$idtrans) {
-				$detail = $detail.'<td></td>';
+				$detail = $detail.'<td align="center">-</td>';
 			}else{
 				$detail = $detail.'<td align="center">'.$row->id_trans.'</td>';
 			}
@@ -142,14 +142,14 @@ class LapSalesOrderController extends MainController {
 		foreach ($data as $row){
 			$pdf->Cell(13,7,$no.'.',1,0);
 			if ($row->tgl_trans==$tgl) {
-				$pdf->Cell(45,7,'',1,0,'C');
+				$pdf->Cell(45,7,'-',1,0,'C');
 			}else{
 				$pdf->Cell(45,7,$row->tgl_trans,1,0,'C');
 			}
 			$tgl = $row->tgl_trans;
 
 			if ($row->id_trans==$idtrans) {
-				$pdf->Cell(40,7,'',1,0,'C');
+				$pdf->Cell(40,7,'-',1,0,'C');
 			}else{
 				$pdf->Cell(40,7,$row->id_trans,1,0,'C');
 			}
@@ -165,7 +165,7 @@ class LapSalesOrderController extends MainController {
 
 		//footer
 		$pdf->SetFont('Arial','B',10);
-		$pdf->Cell(10,10,'* Untuk bagian tabel yang kosong, artinya data sama seperti diatasnya',0,0,'L');
+		$pdf->Cell(10,10,'* Untuk bagian tabel - , artinya data sama seperti diatasnya',0,0,'L');
 
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(475,10,'Total Qty',0,0,'C');

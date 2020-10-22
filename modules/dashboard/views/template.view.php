@@ -60,6 +60,7 @@ $page = (isset($_GET['page']) && $_GET['page']) ? $_GET['page'] : 'dashboard/hom
 
 	<!-- JS -->
 	<script src="resources/assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> -->
 	<script src="resources/assets/js/atlantis.min.js"></script>
 	<script src="resources/assets/plugins/toastr/toastr.js"></script>
 	<script src="resources/assets/plugins/barcode/qrcodelib.js"></script>
