@@ -9,8 +9,50 @@ class BarangController extends MainController {
 		$model = new BarangModel();
 
 		$data = $model->get_data();
+		$success = null;
 
-		$this->template('master/barang', array('barang' => $data));
+		if($_SERVER["REQUEST_METHOD"] == "POST") {
+			require_once "resources/assets/plugins/PHPExcel/Classes/PHPExcel.php";
+			require_once "resources/assets/plugins/PHPExcel/Classes/PHPExcel/IOFactory.php";
+
+			$file = $_FILES['fileimport']['tmp_name'];
+			$load = PHPExcel_IOFactory::load($file);
+			$sheets = $load->getActiveSheet()->toArray(null,true,true,true);
+
+			$i = 1;
+			foreach ($sheets as $sheet) {
+
+				if ($i > 1) {
+					$sql = '';
+
+					$this->model('barang','master');
+					$model = new BarangModel();
+					$data = $model->get_num_where($sheet['A']);
+
+					foreach ($data as $row){
+						$numrow = $row->jml;
+					}
+					// var_dump($numrow);
+					if ($numrow == 1) {
+						//udate
+						$sql = 'UPDATE temp_barang SET id_barang="'.$sheet['B'].'", nm_barang="'.$sheet['C'].'" WHERE kode_brg="'.$sheet['A'].'"';
+					} else {
+						//insert
+						$sql = 'INSERT INTO temp_barang SET';
+						$sql .= ' kode_brg="'.$sheet['A'].'",';
+						$sql .= ' id_barang="'.$sheet['B'].'",';
+						$sql .= ' nm_barang="'.$sheet['C'].'"';
+					}
+					$model->importdata($sql);
+				}
+
+				$i++;
+			}
+			$success = "Data Berhasil di Upload.";
+		}
+
+		$this->template('master/barang', array('barang' => $data, 'sukses' => $success));
+
 	}
 
 	public function ajaxbarang() {
@@ -20,6 +62,84 @@ class BarangController extends MainController {
 		$data = $model->get_data();
 
 		echo json_encode($data);
+	}
+
+	public function listpost() {
+		$this->model('barang','master');
+		$model = new BarangModel();
+
+		$data = $model->get_data_post();
+
+		echo json_encode($data);
+	}
+
+	public function ajaxposting()
+	{
+		$this->model('barang','master');
+		$model = new BarangModel();
+
+		$row = $model->get_data_post();
+		for ($i=0; $i < count($row); $i++) { 
+			$cek = $model->get_num_where_id($row[$i]->kode_brg);
+			$jml = $cek[0]->jml;
+			if ($jml==0) {
+				//insert
+				$sql = 'INSERT INTO barang SET';
+				$sql .= ' kode_brg="'.$row[$i]->kode_brg.'",';
+				$sql .= ' id_barang="'.$row[$i]->id_barang.'",';
+				$sql .= ' nm_barang="'.$row[$i]->nm_barang.'", lastmodified=NOW()';
+			} else {
+				//update
+				$sql = 'UPDATE barang SET id_barang="'.$row[$i]->kode_brg.'", nm_barang="'.$row[$i]->id_barang.'", lastmodified=NOW() WHERE kode_brg="'.$row[$i]->kode_brg.'"';
+			}
+			$model->importdata($sql);
+		}
+		$model->truncateTemp();
+		echo json_encode('');
+	}
+
+	public function exportbrgexcel()
+	{
+		$cari = isset($_GET["cari"]) ? $_GET["cari"] : '';
+
+		$filename="Data Barang - ".date('Ymd').".xls";
+
+		header("Content-Type: application/vnd-ms-excel"); 
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		$this->model('barang','master');
+		$model = new BarangModel();
+		$data = $model->get_where($cari);
+
+		//title
+		echo '<h2 align="center">Data Barang</h2>';
+
+		//head
+		$head = '<table border="solid black 1px">'.
+		'<thead><tr><td>No.</td>'.
+		'<td align="center">Kode Barang</td>'.
+		'<td align="center">ID Barang</td>'.
+		'<td align="center">Nama Barang</td>'.
+		'<td align="center">Alias</td></tr></thead>';
+
+		//detail
+		$no = 1;
+		$detail = '<tbody>';
+		foreach ($data as $row){
+			$detail = $detail.'<tr><td align="left">'.$no.'</td>';
+			$detail = $detail.'<td align="center">'.$row->kode_brg.'</td>';
+			$detail = $detail.'<td align="center">'.$row->id_barang.'</td>';
+			$detail = $detail.'<td align="center">'.$row->nm_barang.'</td>';
+			$detail = $detail.'<td align="center">'.$row->alias.'</td></tr>';
+			$no++;
+		}
+
+		$detail = $detail.'</tbody></table>';
+
+		echo $head;
+		echo $detail;
+
+		exit;
 	}
 
 	public function exportbrg(){
